@@ -1,16 +1,31 @@
 'use client';
 
 import Image from "next/image";
-import { useState, useRef } from "react";
-import { useRouter } from 'next/navigation';
+import { useState, useRef, useEffect } from "react";
+import routes from "@/utils/routes";
+import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/register-process-store";
 
 export default function VerificationPage() {
     const router = useRouter();
+    const [isHydrated, setIsHydrated] = useState(false);
     const userEmail = useUserStore((state: any) => state.email);
     const [codes, setCodes] = useState(["", "", "", "", "", ""]);
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
     const isDisabled = codes.some(code => code.trim() === "");
+
+    useEffect(() => {
+        const unsubscribe = useUserStore.persist.onFinishHydration(() => {
+            setIsHydrated(true);
+        });
+        return () => unsubscribe();
+    }, []);
+
+    useEffect(() => {
+        if (isHydrated && !userEmail) {
+            router.push(routes.register);
+        }
+    }, [isHydrated, userEmail, router]);
 
     const handleChange = (index: number, value: string) => {
         if (!/^[0-9]{0,1}$/.test(value)) return;
@@ -34,6 +49,7 @@ export default function VerificationPage() {
         e.preventDefault();
         const finalCode = codes.join('');
         console.log("Code de vérification:", finalCode);
+        router.push(routes.plan);
     }
 
     return (
@@ -74,7 +90,7 @@ export default function VerificationPage() {
 
                     <button
                         type="button"
-                        onClick={() => router.push('/register')}
+                        onClick={() => router.push(routes.register)}
                         className="w-full h-[51px] border border-[#303030] rounded-xl p-4 mt-3 text-[#C7C7C7] text-[16px] cursor-pointer font-medium font-[family-name:var(--font-inter)]"
                     >
                         Back

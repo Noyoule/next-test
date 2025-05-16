@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from 'next/link';
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
+import routes from "@/utils/routes";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -18,7 +19,7 @@ export default function LoginPage() {
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        router.push('/verification');
+        router.push(routes.verification);
     }
     return (
         <div className="h-screen w-screen flex items-center justify-center p-1 dark:bg-black bg-white">

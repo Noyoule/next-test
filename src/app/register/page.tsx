@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { useUserStore } from "@/stores/register-process-store";
+import routes from "@/utils/routes";
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -21,7 +22,7 @@ export default function RegisterPage() {
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setStoreEmail(email);
-        router.push('/verification');
+        router.push(routes.verification);
     }
     return (
         <div className="h-screen w-screen flex items-center justify-center p-1 dark:bg-black bg-white">
